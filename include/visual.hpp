@@ -24,7 +24,7 @@ protected :
     const char* FONT = "Trebuchet MS Bold.ttf";     // text font on screen
     const SDL_Color BLACK = {0,0,0};                // color black
     const SDL_Color RED = {255,0,0};                // color red
-    const SDL_Color GREEN = {0,255,0};              // color green
+    const SDL_Color GRAY = {128,128,128};           // color gray
     const SDL_Color BLUE = {0,0,255};               // color blue
     const SDL_Color GOLD = {204,204,0};             // color gold
 

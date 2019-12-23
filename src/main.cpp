@@ -11,12 +11,10 @@
 
 int main(int argc, const char * argv[]) {
 
-    // test addAll (it's wrong)
-    // consolidate helpingnumbers methods (reused same three lines twice now)
+    // better Board::entryToIdx implementation
     // test autosave
-    // clean up 'small' in visualboard and helpingnumbers class
     // use more helper methods like red outline movement method, etc; tell the story- what if movement changed?
-    // clear helpers in fillBoard method probably
+    // clear helpers in fillBoard method probably when using test player
     // add less hard puzzle to puzzles to demonstrate ease without brute force
     // use googletest
     // tests
@@ -26,6 +24,8 @@ int main(int argc, const char * argv[]) {
 //    VisualPlayer p("Chuck", true, false);
     p.play();
     return 0;
+
+    // test add all with empty board and regular board, save and compare
 
     //////put these tests somewhere
     for (int i=0; i<Board::N; i++) {

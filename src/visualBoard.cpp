@@ -72,49 +72,13 @@ bool VisualBoard::insert(Board* b) {
     char c = rNum.text;
     if (b->insert(i, j, c)) {
 
-        nums[i][j] = VisualText(s, c, GOLD, rPos, 1, BOARD_WIDTH/Board::N);
+        nums[i][j] = VisualText(s, c, GRAY, rPos, 1, BOARD_WIDTH/Board::N);
         rNum.clear();
         vOutlinePos[b->entryToIdx(c)].push_back(rPos);
-/*
-        ////////////put this in separate method!!!!!!!!!!!!!
-        //remove helping numbers at position (i, j)
-        for ( VisualChar& vc : smallNums[i][j] ) {
-            //remove outlines
-            std::vector<SDL_Point>& v = m_outlineSmallPos[ vc.vChar ];
-            for (auto it = v.begin(); it != v.end(); ++it) {
-                if ( it->x == vc.rect2.x && it->y == vc.rect2.y ) { it = v.erase( it ); it--; }
-            }
-            //remove small numbers
-            vc.clear();
-        }
-        smallNums[i][j].clear();
 
-        //////////////use separate method!!!!!!!!!
-        //remove helping numbers in same row, col, or square
-        std::vector<SDL_Point>& v = m_outlineSmallPos[ vNums[i][j].vChar ];
-        for (auto it = v.begin(); it != v.end(); ++it) {
-            int small_i, small_j;
-            cartesian2Board( *it, &small_i, &small_j );
+        helpers.removeAllAt(i, j);
+        helpers.removeSurrounding(i, j, c, s);
 
-            // if same row, col, or square, then remove
-            if ( small_i==i || small_j==j || Square::pos2Square( {i,j} )==Square::pos2Square( {small_i,small_j} ) ) {
-                //remove outline
-                it = v.erase( it ); //since not breaking, must recalculate v.end()
-                it--;
-
-                std::vector<VisualChar>& v2 = smallNums[ small_i ][ small_j ];
-                for (auto it2 = v2.begin(), end_it2 = v2.end(); it2 != end_it2; ++it2) {
-
-                    if ( it2->vChar == vNums[i][j].vChar ) {
-                        //remove small number
-                        it2->clear();
-                        v2.erase( it2 );
-                        rearrangeSmallNums( small_i, small_j, it2, s );
-                        break;
-                    }
-                }
-            }
-        }*/
         return true;
     }
     else return false;
@@ -181,7 +145,7 @@ void VisualBoard::handleEvent(const SDL_Event& e) {
         int x, y;
         SDL_GetMouseState(&x, &y);
 
-        // draw green outline if mouse inside board
+        // draw gold outline if mouse inside board
         if (BXPOS<x && x<BXPOS+BOARD_WIDTH && BYPOS<y && y<BYPOS+BOARD_HEIGHT) {
 
             // round (x, y) to nearest square outline
@@ -207,7 +171,7 @@ void VisualBoard::handleEvent(const SDL_Event& e) {
                 screen2Board(rPos, &i, &j);
                 if (nums[i][j].isEmpty()) {
                     rNum.clear();
-                    rNum = VisualText(s, c, GREEN, rPos, 1, BOARD_WIDTH/Board::N);
+                    rNum = VisualText(s, c, GOLD, rPos, 1, BOARD_WIDTH/Board::N);
                 }
             }
         }
@@ -217,7 +181,7 @@ void VisualBoard::handleEvent(const SDL_Event& e) {
 bool VisualBoard::handleHelpers(const Board& b, const SDL_Event& e) {
     if (s.notWorking()) return false;
 
-    // double click removes a helping number
+    // double-click removes a helping number
     if (e.type == SDL_MOUSEBUTTONUP && e.button.clicks == 2) {
         int x, y;
         SDL_GetMouseState(&x, &y);
@@ -268,7 +232,7 @@ void VisualBoard::render() {
 
     // if gpos is on the visual board
     if (isOnscreen(gPos))
-        drawOutline(s, GREEN, gPos);
+        drawOutline(s, GOLD, gPos);
 
     // if rpos is on the visual board
     if (isOnscreen(rPos)) {

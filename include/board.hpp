@@ -64,6 +64,14 @@ public :
     static int entryToIdx(char c);
 
     /**
+     * Get the square number of a row and col
+     * @param i the row
+     * @param j the col
+     * @return the square number
+     */
+    static int getSquareNumber(int i, int j);
+
+    /**
      * Initialize board0
      */
     void setInitialBoard();

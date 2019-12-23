@@ -30,6 +30,11 @@ int Board::entryToIdx(char c) {
     return c - '0' - 1;
 }
 
+int Board::getSquareNumber(int i, int j) {
+    int srn = sqrt(N);
+    return i/srn*srn + j/srn;
+}
+
 void Board::addEntry(char c) {
     int idx = entryToIdx(c);
     if (0<=idx && idx<N) {

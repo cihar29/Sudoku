@@ -16,8 +16,7 @@
 struct VisualText {
     char text;              // the text
     SDL_Texture* texture;   // text texture
-    SDL_Rect rect1, rect2;  // rectangles used to draw text
-    ///////////elaborate on rectangles
+    SDL_Rect rect1, rect2;  // rectangle for this texture and the target rectangle for the render
 
     /**
      * Default initialization

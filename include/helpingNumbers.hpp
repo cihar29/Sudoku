@@ -25,10 +25,19 @@ class helpingNumbers : public Visual {
     /**
      * Get the position of a helping number on screen
      * @param pos the position of the row and col on board
-     * @param i the row
-     * @param j the col
+     * @param idx the position within the row and col
      */
-    SDL_Point getPos(const SDL_Point& pos, int i, int j) const;
+    SDL_Point getPos(const SDL_Point& pos, int idx) const;
+
+    /**
+     * Rearrange order of helping numbers after removing one in a row and col
+     * @param pos the position of the row and col
+     * @param v the list of numbers at the row and col
+     * @param it the iterator of pointing to the recently deleted number
+     * @param s the screen
+     */
+    void rearrangeNums(const SDL_Point& pos, std::vector<VisualText>& v,
+                       std::vector<VisualText>::iterator it, const Screen& s);
 
 public :
     /**
@@ -58,6 +67,22 @@ public :
     void remove(const SDL_Point& pos, const Screen& s);
 
     /**
+     * Remove the helping numbers surrounding the entry at (i, j) in board
+     * @param i the row
+     * @param j the col
+     * @param c the entry
+     * @param s the screen
+     */
+    void removeSurrounding(int i, int j, char c, const Screen& s);
+
+    /**
+     * Remove all helping numbers at (i, j) on board
+     * @param i the row
+     * @param j the col
+     */
+    void removeAllAt(int i, int j);
+
+    /**
      * Add all helping numbers to the board
      * @param b the board
      * @param s the screen
@@ -79,10 +104,6 @@ public :
      * Clear the helping numbers
      */
     void clear();
-/*
-    //rearrange small nums after removal; pass board coordinates of small nums and iterator of first small num to rearrange
-    void rearrangeSmallNums( int i, int j, std::vector<VisualChar>::iterator it, const Screen& s );
-    */
 };
 
 #endif /* helpingNumbers_hpp */

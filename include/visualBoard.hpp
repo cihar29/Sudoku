@@ -23,7 +23,7 @@ class VisualBoard : public Visual {
     VisualText title, text, subText;        // title, text, and subtext for the visual board
     VisualText nums[Board::N][Board::N];    // array of Sudoku numbers
     VisualText rNum;                        // the number (could be any color) highlighted in red at rPos
-    SDL_Point rPos, gPos;                   // red and green outline positions
+    SDL_Point rPos, gPos;                   // red and gold outline positions
     std::vector<SDL_Point>
         vOutlinePos[Board::N];              // positions of the outlined numbers per number
     helpingNumbers helpers;                 // collection of helping numbers on Sudoku board
