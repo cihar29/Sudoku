@@ -52,17 +52,17 @@ public :
      * Initialize visual player with board from file
      * @param n player name
      * @param fname file name
-     * @param asave true if autosave board after each valid move
+     * @param autoSave true if autosave board after each valid move
      */
-    VisualPlayer(std::string n, std::string fname, bool asave);
+    VisualPlayer(std::string n, std::string fname, bool autoSave);
 
     /**
      * Initialize visual player with empty board
      * @param n player name
      * @param create true if user creates board
-     * @param asave true if autosave board after each valid move
+     * @param autoSave true if autosave board after each valid move
      */
-    VisualPlayer(std::string n, bool create, bool asave);
+    VisualPlayer(std::string n, bool create, bool autoSave);
 };
 
 #endif /* visualPlayer_hpp */

@@ -158,49 +158,18 @@ void helpingNumbers::removeAllAt(int i, int j) {
 
 void helpingNumbers::addAll(const Board& b, const Screen& s) {
     clear();
+    Technique t(b);
 
-    // mark entries in each row, col, and square
-    bool rows[Board::N][Board::N] = {false}, cols[Board::N][Board::N] = {false}, sqs[Board::N][Board::N] = {false};
-    for (int k=0; k<Board::N; k++) {
-
+    for (int i=0; i<Board::N; i++) {
         for (int j=0; j<Board::N; j++) {
-            char c = b.at(k, j);
-            if (c == Board::BLANK) continue;
-            int idx = b.entryToIdx(c);
-            rows[k][idx] = true;
-        }
-
-        for (int i=0; i<Board::N; i++) {
-            char c = b.at(i, k);
-            if (c == Board::BLANK) continue;
-            int idx = b.entryToIdx(c);
-            cols[k][idx] = true;
-        }
-
-        for (Square sq(k); sq.hasNext(); sq.next()) {
-            int i, j;
-            sq.getPos(&i, &j);
-            char c = b.at(i, j);
-            if (c == Board::BLANK) continue;
-            int idx = b.entryToIdx(c);
-            sqs[k][idx] = true;
-        }
-    }
-    // loop over squares, hitting every row and col
-    for (int k=0; k<Board::N; k++) {
-        for (Square sq(k); sq.hasNext(); sq.next()) {
-            int i, j;
-            sq.getPos(&i, &j);
             if (b.at(i, j) != Board::BLANK) continue;
 
-            // look at available (false) entries in ith row, jth col, and kth square
+            // look at available entries in board
             for (char c='1'; c<='9'; c++) {
-                int idx = b.entryToIdx(c);
-                if (!rows[i][idx] && !cols[j][idx] && !sqs[k][idx]) {
-
+                if (t.isAvailable(i, j, c)) {
                     SDL_Point pos = getPos(board2Screen(i, j), vNums[i][j].size());
                     vNums[i][j].push_back(VisualText(s, c, COLOR, pos, SIZE));
-                    vOutlinePos[idx].push_back(pos);
+                    vOutlinePos[b.entryToIdx(c)].push_back(pos);
                 }
             }
         }

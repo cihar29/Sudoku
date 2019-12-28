@@ -47,12 +47,6 @@ class Player {
      */
     virtual void input();
 
-    /**
-     * Handle the end of the game, including quitting midgame
-     * @param winner did player win?
-     */
-    virtual void end(bool winner);
-
 protected :
     const std::string NAME;                 // player name
     const std::string WINTEXT
@@ -84,22 +78,28 @@ protected :
      */
     virtual void save(std::string text = "", std::string subText = "");
 
+    /**
+     * Handle the end of the game, including quitting midgame
+     * @param winner did player win?
+     */
+    virtual void end(bool winner);
+
 public :
     /**
      * Initialize player with board from file
      * @param n player name
      * @param fname file name
-     * @param asave true if autosave board after each valid move
+     * @param autoSave true if autosave board after each valid move
      */
-    Player(std::string n, std::string fname, bool asave);
+    Player(std::string n, std::string fname, bool autoSave);
     
     /**
      * Initialize player with empty board
      * @param n player name
      * @param create true if user creates board
-     * @param asave true if autosave board after each valid move
+     * @param autoSave true if autosave board after each valid move
      */
-    Player(std::string n, bool create, bool asave);
+    Player(std::string n, bool create, bool autoSave);
 
     /**
      * Play Sudoku

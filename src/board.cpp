@@ -66,7 +66,10 @@ Board::Board(std::string fname) : nFilled(0), entries(), text("") {
 
             size_t len = line.length();
             // ignore lines starting with #
-            if (len > 0 && line[0] == '#') continue;
+            if (len > 0 && line[0] == '#') {
+                i--;
+                continue;
+            }
             else if (len > N) setAndPrintText("Too many characters");
 
             for (int j=0; j<N; j++) {

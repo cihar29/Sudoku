@@ -8,8 +8,8 @@
 
 #include "player.hpp"
 
-Player::Player(std::string n, std::string fname, bool asave) :
-NAME(n), dName(""), nSaves(0), forceQuit(false), nMoves(0), b(fname), AUTOSAVE(asave) {
+Player::Player(std::string n, std::string fname, bool autoSave) :
+NAME(n), dName(""), nSaves(0), forceQuit(false), nMoves(0), b(fname), AUTOSAVE(autoSave) {
 
 }
 
@@ -68,8 +68,8 @@ void Player::initializeBoard() {
     b.clearText();
 }
 
-Player::Player(std::string n, bool create, bool asave) :
-NAME(n), dName(""), nSaves(0), forceQuit(false), nMoves(0), b{}, AUTOSAVE(asave) {
+Player::Player(std::string n, bool create, bool autoSave) :
+NAME(n), dName(""), nSaves(0), forceQuit(false), nMoves(0), b{}, AUTOSAVE(autoSave) {
 
     if (create) initializeBoard();
 }

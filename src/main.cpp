@@ -8,19 +8,27 @@
 
 #include "player.hpp"
 #include "visualPlayer.hpp"
+#include "compPlayer.hpp"
 
 int main(int argc, const char * argv[]) {
 
+    // make sure all tests are passed in technique_test
+    // allow solving infinitely many solution puzzles (eg completely blank board)
     // better Board::entryToIdx implementation
-    // test autosave
+    // test autosave (especially in visualplayer::end (order of rendering))
     // use more helper methods like red outline movement method, etc; tell the story- what if movement changed?
     // clear helpers in fillBoard method probably when using test player
     // add less hard puzzle to puzzles to demonstrate ease without brute force
     // use googletest
-    // tests
+    // tests - every method! (lots to test in technique)
     // make file with better compiler language
 
-    VisualPlayer p("Chuck", std::string("puzzles/input1.txt"), false);
+    // use run file to choose which type of player and options to use
+//    VisualPlayer p("Chuck", std::string("technique_tests/intersect_col.txt"), false);
+    CompPlayer p("Chuck", std::string("puzzles/input1.txt"), false, false);
+//    CompPlayer p("Chuck", std::string("save3/board1.txt"), false, true);
+//    VisualPlayer p("Chuck", std::string("puzzles/input1.txt"), false);
+//    VisualPlayer p("Chuck", std::string("save3/board1.txt"), false);
 //    VisualPlayer p("Chuck", true, false);
     p.play();
     return 0;

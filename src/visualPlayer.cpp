@@ -14,7 +14,7 @@ void VisualPlayer::start() {
     vb.render();
 }
 
-VisualPlayer::VisualPlayer(std::string n, std::string fname, bool asave) : Player(n, fname, asave), vb(b, n) {
+VisualPlayer::VisualPlayer(std::string n, std::string fname, bool autoSave) : Player(n, fname, autoSave), vb(b, n) {
     start();
 }
 
@@ -51,7 +51,7 @@ void VisualPlayer::createBoard() {
     }
 }
 
-VisualPlayer::VisualPlayer(std::string n, bool create, bool asave) : Player(n, false, asave), vb(b, n) {
+VisualPlayer::VisualPlayer(std::string n, bool create, bool autoSave) : Player(n, false, autoSave), vb(b, n) {
     if (create) {
         initializeBoard();
         vb.fillBoard(b);
@@ -115,17 +115,15 @@ void VisualPlayer::input() {
 }
 
 void VisualPlayer::end(bool winner) {
-    if (forceQuit) printf("%s\n\n", QUITTEXT.data());
+    if (forceQuit) Player::end(winner);
     else {
-        b.print();
-        printf("%s\n\n", winner?WINTEXT.data():LOSETEXT.data());
-
         std::string text = winner?WINTEXT:b.getText();
         std::string subText = winner?"":LOSETEXT;
 
+        // render before autosave called in Player::end
         vb.setText(text, subText);
         vb.render();
-        if (AUTOSAVE) save(text, subText);
+        Player::end(winner);
 
         // wait for player to close window
         SDL_Event e;

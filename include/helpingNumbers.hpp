@@ -13,6 +13,7 @@
 #include "visual.hpp"
 #include "visualText.hpp"
 #include "board.hpp"
+#include "technique.hpp"
 
 class helpingNumbers : public Visual {
     const SDL_Color COLOR;                              // color of the numbers
@@ -91,11 +92,13 @@ public :
 
     /**
      * Draw the helping numbers on the screen
+     * @param s the screen
      */
     void renderNums(const Screen& s);
 
     /**
      * Draw the outlines of the helping numbers on the screen
+     * @param s the screen
      * @param idx the index of the outlines to access
      */
     void renderOutlines(const Screen& s, int idx);
