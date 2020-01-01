@@ -282,6 +282,11 @@ void VisualBoard::save(std::string fname) {
     render();
 }
 
+void VisualBoard::setInsert(int i, int j, char c) {
+    rNum.text = c;
+    rPos = board2Screen(i, j);
+}
+
 void VisualBoard::clear() {
     rNum.clear();
     text.clear();

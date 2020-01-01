@@ -109,6 +109,14 @@ public :
     void save(std::string fname);
 
     /**
+     * Set rNum and rPos to prepare for insert
+     * @param i the row for rPos
+     * @param j the col for rPos
+     * @param c the entry for rNum
+     */
+    void setInsert(int i, int j, char c);
+
+    /**
      * Clear the visual board
      */
     void clear();

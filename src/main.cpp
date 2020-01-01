@@ -6,29 +6,26 @@
 //  Copyright © 2019 Charles Harrington. All rights reserved.
 //
 
-#include "player.hpp"
-#include "visualPlayer.hpp"
-#include "compPlayer.hpp"
+#include "visualCompPlayer.hpp"
 
 int main(int argc, const char * argv[]) {
 
-    // make sure all tests are passed in technique_test
-    // allow solving infinitely many solution puzzles (eg completely blank board)
-    // better Board::entryToIdx implementation
+    // play method needs to have a virtual initialize method (instead of putting these start methods in constructor)!
+    // obviously test gameplay for all four types (and corresponding save/autosave)
+    // for visual board, don't make a copy - instead use same board and fillBoard method
+    // check gpos and rpos after creating board for visualcompplayer (saves and autosaves too)
+    // make sure all tests are passed in technique_test (add more techniques)
     // test autosave (especially in visualplayer::end (order of rendering))
-    // use more helper methods like red outline movement method, etc; tell the story- what if movement changed?
-    // clear helpers in fillBoard method probably when using test player
     // add less hard puzzle to puzzles to demonstrate ease without brute force
     // use googletest
     // tests - every method! (lots to test in technique)
     // make file with better compiler language
 
     // use run file to choose which type of player and options to use
-//    VisualPlayer p("Chuck", std::string("technique_tests/intersect_col.txt"), false);
-    CompPlayer p("Chuck", std::string("puzzles/input1.txt"), false, false);
-//    CompPlayer p("Chuck", std::string("save3/board1.txt"), false, true);
+//    VisualCompPlayer p("Chuck", true, false, true);
+//    VisualCompPlayer p("Chuck", std::string("puzzles/input1.txt"), false, true);
+    CompPlayer p("Chuck", std::string("puzzles/input1.txt"), true, false);
 //    VisualPlayer p("Chuck", std::string("puzzles/input1.txt"), false);
-//    VisualPlayer p("Chuck", std::string("save3/board1.txt"), false);
 //    VisualPlayer p("Chuck", true, false);
     p.play();
     return 0;

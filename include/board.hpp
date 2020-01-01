@@ -176,7 +176,7 @@ public :
      * @param fname the file name
      * @param title title displayed at the top of file
      * @param text text displayed at the bottom of file
-     * @param subText subText displayed below text
+     * @param subText subtext displayed below text
      */
     void save(std::string fname, std::string title = "", std::string text = "", std::string subText = "") const;
 };

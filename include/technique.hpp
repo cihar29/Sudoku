@@ -20,12 +20,20 @@ class Technique {
     std::string text;                           // text describing the technique
 
     /**
+     * Make entry unavailable by decrementing the count arrays with index idx at position (i, j)
+     * @param i the row
+     * @param j the col
+     * @param idx the index of the entry
+     */
+    void decrement(int i, int j, int idx);
+
+    /**
      * Decrement the count arrays with c0 in the positions surrounding (i0, j0)
      * @param i0 the row
      * @param j0 the col
      * @param c0 the entry
      */
-    void decrementSurrounding(int i0, int j0, int c0);
+    void decrementSurrounding(int i0, int j0, char c0);
 
 public :
     /**
@@ -49,14 +57,12 @@ public :
     std::string getText() const;
 
     /**
-     * Insert entry c at (i, j) into board and modify arrays
-     * @param b the board
+     * Modify available number arrays based on entry c inserted at (i, j)
      * @param i the row
      * @param j the col
      * @param c the entry
-     * @return true if entry successfully inserted into b
      */
-    bool insert(Board* b, int i, int j, int c);
+    void insert(int i, int j, char c);
 
     /**
      * Check if any row has an entry available exactly once
@@ -73,6 +79,31 @@ public :
      * @return true if entry available once in a col
      */
     bool availableInCol(int* j0, char* c0);
+
+    /**
+     * Check if any square has an entry available exactly once
+     * @param k0 the available square
+     * @param c0 the available entry
+     * @return true if entry available once in a square
+     */
+    bool availableInSq(int* k0, char* c0);
+
+    /**
+     * Check if any position has only one available entry
+     * @param i0 the available row
+     * @param j0 the available col
+     * @return true if a position has one available entry
+     */
+    bool oneAvailable(int* i0, int* j0);
+
+    /**
+     * Get the next available entry c0 at position (i0, j0)
+     * @param i0 the row
+     * @param j0 the col
+     * @param c0 the entry
+     * @return true if an entry is available
+     */
+    bool nextAvailable(int* i0, int* j0, char* c0);
 };
 
 #endif /* technique_hpp */

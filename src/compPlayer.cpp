@@ -9,64 +9,157 @@
 #include "compPlayer.hpp"
 
 CompPlayer::CompPlayer(std::string n, std::string fname, bool autoSave, bool walkThrough) :
-Player(n, fname, autoSave), tech(b), WALKTHROUGH(walkThrough) {
+Player(n, fname, autoSave), TEST(false), tech(b), WALKTHROUGH(walkThrough), endTest(false) {
 
+    start(STARTTEXT);
 }
 
 CompPlayer::CompPlayer(std::string n, bool create, bool autoSave, bool walkThrough) :
-Player(n, create, autoSave), tech(b), WALKTHROUGH(walkThrough) {
+Player(n, create, autoSave), TEST(false), tech(b), WALKTHROUGH(walkThrough), endTest(false) {
 
+    start(STARTTEXT);
 }
 
-bool CompPlayer::solve() {
-    int i, j, k;
-    char c;
+CompPlayer::CompPlayer(std::string n, const Board& b, bool autoSave,
+                       bool walkThrough, const Technique& t, std::string dname) :
+Player(n, b, autoSave, dname), TEST(true), tech(t), WALKTHROUGH(walkThrough), endTest(false) {
 
-    if (tech.availableInRow(&i, &c)) {
+    start(STARTTEXT);
+}
+
+void CompPlayer::start(std::string text, std::string subText) {
+    b.print();
+    if (AUTOSAVE) save(text, subText);
+    if (WALKTHROUGH) waitForEnter(text, subText);
+}
+
+void CompPlayer::waitForEnter(std::string text, std::string subText) {
+    std::string input;
+    do {
+        std::cout << "Press enter to continue ('q' to quit): ";
+        std::getline(std::cin, input);
+        if (input == "q") {
+            forceQuit = true;
+            return;
+        }
+        else if (input == "s")
+            save(text, subText);
+    } while (!input.empty());
+}
+
+bool CompPlayer::solve(int* i0, int* j0, char* c0) {
+    
+    if (tech.availableInRow(i0, c0)) {
         // get corresponding col
-        for (j=0; j<Board::N; j++)
-            if (tech.isAvailable(i, j, c))
-                break;
-        return tech.insert(&b, i, j, c);
+        for (int j=0; j<Board::N; j++) {
+            if (tech.isAvailable(*i0, j, *c0)) {
+                *j0 = j;
+                return true;
+            }
+        }
     }
-    else if (tech.availableInCol(&j, &c)) {
+    else if (tech.availableInCol(j0, c0)) {
         // get corresponding row
-        for (i=0; i<Board::N; i++)
-            if (tech.isAvailable(i, j, c))
-                break;
-        return tech.insert(&b, i, j, c);
+        for (int i=0; i<Board::N; i++)
+            if (tech.isAvailable(i, *j0, *c0)) {
+                *i0 = i;
+                return true;
+            }
     }
-    // else if (tech.availableInSq(&k, &c))
-    // else if (tech.oneAvailable(&i, &j, &c))
+    else if (int k; tech.availableInSq(&k, c0)) {
+        // get corresponding row and col
+        for (Square sq(k); sq.hasNext(); sq.next()) {
+            int i, j;
+            sq.getPos(&i, &j);
+            if (tech.isAvailable(i, j, *c0)) {
+                *i0 = i;
+                *j0 = j;
+                return true;
+            }
+        }
+    }
+    else if (tech.oneAvailable(i0, j0)) {
+        // get corresponding entry
+        for (char c='1'; c<='9'; c++) {
+            if (tech.isAvailable(*i0, *j0, c)) {
+                *c0 = c;
+                return true;
+            }
+        }
+    }
     // no moves
+    return false;
+}
+
+bool CompPlayer::insert(int i, int j, char c, std::string text) {
+    if (b.insert(i, j, c)) {
+        tech.insert(i, j, c);
+        printf("%s\n\n\n", text.data());
+        b.print();
+        if (AUTOSAVE) save(b.getText(), text);
+        return true;
+    }
     else return false;
 }
 
 void CompPlayer::input() {
-    b.print();
+    int i, j;
+    char c;
+    if (solve(&i, &j, &c)) {
 
-    if (solve()) {
-        std::string technique = tech.getText();
-        printf("%s\n\n\n", technique.data());
-
-        if (WALKTHROUGH) {
-            std::string input;
-            do {
-                std::cout << "Press enter to continue ('q' to quit): ";
-                std::getline(std::cin, input);
-                if (input == "q") {
-                    forceQuit = true;
-                    return;
-                }
-                else if (input == "s")
-                    save(b.getText(), technique);
-            } while (!input.empty());
+        std::string techText = tech.getText();
+        if (!insert(i, j, c, techText)) {
+            forceQuit = true;
+            return;
         }
-        if (AUTOSAVE) save(b.getText(), technique);
+        if (WALKTHROUGH) waitForEnter(b.getText(), techText);
     }
     else {
         printf("%s\n\n", NOMOVESTEXT.data());
+        if (TEST) {
+            endTest = true;
+            forceQuit = true;
+            return;
+        }
         // brute force
-        forceQuit = true;   // temporary
+        int i, j;
+        char c;
+        while (tech.nextAvailable(&i, &j, &c)) {
+            CompPlayer test("Test " + NAME, b, AUTOSAVE, WALKTHROUGH, tech, dName);
+
+            if (test.forceQuit || !test.insert(i, j, c, tech.getText())) {
+                forceQuit = true;
+                return;
+            }
+            else if (test.play()) {
+                nMoves += test.getNMoves();
+                b = test.b;     // set the winning board
+                return;
+            }
+            else if (test.forceQuit) {
+                forceQuit = true;
+                return;
+            }
+            nMoves += test.getNMoves();
+        }
     }
+}
+
+void CompPlayer::save(std::string text, std::string subText) {
+    // check if we already have a directory for test player
+    if (TEST) {
+        if (dName.empty())
+            mkSaveDir(DBASE);
+        if (dName.find(TESTDBASE) == std::string::npos)
+            mkSaveDir(dName + "/" + TESTDBASE);
+    }
+    Player::save(text, subText);
+}
+
+void CompPlayer::end(bool winner) {
+    if (TEST) {
+        printf("End test\n\n");
+        if (endTest) forceQuit = false;
+    }
+    else Player::end(winner);
 }

@@ -8,14 +8,19 @@
 
 #include "visualPlayer.hpp"
 
-void VisualPlayer::start() {
-    std::string subText = AUTOSAVE?"Autosave enabled":"";
-    vb.setText(NAME + " Start!", subText);
+void VisualPlayer::start(std::string text, std::string subText) {
+    vb.setText(text, subText);
     vb.render();
+    if (AUTOSAVE) save(text);
 }
 
 VisualPlayer::VisualPlayer(std::string n, std::string fname, bool autoSave) : Player(n, fname, autoSave), vb(b, n) {
-    start();
+    start(STARTTEXT, AUTOSAVE?"Autosave enabled":" ");
+}
+
+VisualPlayer::VisualPlayer(std::string n, const Board& b, bool autoSave, std::string dname) :
+Player(n, b, autoSave, dname), vb(b, n) {
+
 }
 
 void VisualPlayer::createBoard() {
@@ -55,9 +60,8 @@ VisualPlayer::VisualPlayer(std::string n, bool create, bool autoSave) : Player(n
     if (create) {
         initializeBoard();
         vb.fillBoard(b);
-        vb.setText("", " ");
         if (forceQuit) return;
-        start();
+        start(STARTTEXT, AUTOSAVE?"Autosave enabled":" ");
     }
 }
 
@@ -114,6 +118,26 @@ void VisualPlayer::input() {
     }
 }
 
+void VisualPlayer::waitForEnter(std::string text, std::string subText) {
+    while (true) {
+        SDL_Event e;
+        while (SDL_PollEvent(&e) != 0) {
+
+            if (e.type == SDL_QUIT) {
+                forceQuit = true;
+                return;
+            }
+            // save board
+            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) {
+                save(text, subText);
+                vb.render();
+            }
+            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
+                return;
+        }
+    }
+}
+
 void VisualPlayer::end(bool winner) {
     if (forceQuit) Player::end(winner);
     else {
@@ -126,14 +150,7 @@ void VisualPlayer::end(bool winner) {
         Player::end(winner);
 
         // wait for player to close window
-        SDL_Event e;
-        while (e.type != SDL_QUIT) {
-            SDL_PollEvent(&e);
-
-            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s)
-                save(text, subText);
-            vb.render();
-        }
+        waitForEnter(text, subText);
     }
     vb.clear();
 }

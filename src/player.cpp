@@ -13,6 +13,11 @@ NAME(n), dName(""), nSaves(0), forceQuit(false), nMoves(0), b(fname), AUTOSAVE(a
 
 }
 
+Player::Player(std::string n, const Board& b, bool autoSave, std::string dname) :
+NAME(n), dName(dname), nSaves(0), forceQuit(false), nMoves(0), b(b), AUTOSAVE(autoSave) {
+
+}
+
 void Player::getInput(std::string* input) const {
     std::cout << "Row Col Num: ";
     std::getline(std::cin, *input);
@@ -74,7 +79,7 @@ NAME(n), dName(""), nSaves(0), forceQuit(false), nMoves(0), b{}, AUTOSAVE(autoSa
     if (create) initializeBoard();
 }
 
-void Player::mkSaveDir() {
+void Player::mkSaveDir(std::string base) {
     // S_IRWXU - Read, write, execute/search by owner
     // S_IRWXG - Read, write, execute/search by group
     // S_IROTH - Read permission, others
@@ -83,23 +88,14 @@ void Player::mkSaveDir() {
     // iterate the name of the directory until we find an unused directory name, and create it
     do {
         i++;
-        dName = DBASE + std::to_string(i);
+        dName = base + std::to_string(i);
     } while (mkdir(dName.data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1);
 }
 
 void Player::save(std::string text, std::string subText) {
     // check if we already have a directory
-    if (dName.empty()) mkSaveDir();
+    if (dName.empty()) mkSaveDir(DBASE);
 
-/*
-    // test player hack (save without creating base directory first)
-    else if ( dname.find(dbase) == std::string::npos ) {
-        std::string d2name = dname; // brute force directory
-        mkDir();
-        dname += d2name;
-        mkdir( dname.data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
-    }
-*/
     nSaves++;
     std::string fname = dName + "/" + FNAME + std::to_string(nSaves) + ".txt";
     b.save(fname, NAME + "'s Board", text, subText);
@@ -143,10 +139,12 @@ void Player::end(bool winner) {
 }
 
 bool Player::play() {
+    // initialize();
+
     bool valid = b.isValid();
     if (valid && !forceQuit) {
 
-        std::cout << NAME << " Start!\n" << std::endl;
+        std::cout << STARTTEXT << std::endl << std::endl;
         while (!b.isFull()) {
 
             input();

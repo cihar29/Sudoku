@@ -66,40 +66,32 @@ std::string Technique::getText() const {
     return text;
 }
 
-void Technique::decrementSurrounding(int i0, int j0, int c0) {
+void Technique::decrement(int i, int j, int idx) {
+    aNums[i][j][idx] = false;
+    countRow[i][idx]--;
+    countCol[j][idx]--;
+    countSq[Board::getSquareNumber(i, j)][idx]--;
+    countNums[i][j]--;
+}
+
+void Technique::decrementSurrounding(int i0, int j0, char c0) {
     int idx = Board::entryToIdx(c0);
     // check row i0
-    for (int j=0; j<Board::N; j++) {
-        if (aNums[i0][j][idx]) {
-            aNums[i0][j][idx] = false;
-            countRow[i0][idx]--;
-            countCol[j][idx]--;
-            countSq[Board::getSquareNumber(i0, j)][idx]--;
-            countNums[i0][j]--;
-        }
-    }
+    for (int j=0; j<Board::N; j++)
+        if (aNums[i0][j][idx])
+            decrement(i0, j, idx);
+
     // check col j0
-    for (int i=0; i<Board::N; i++) {
-        if (aNums[i][j0][idx]) {
-            aNums[i][j0][idx] = false;
-            countRow[i][idx]--;
-            countCol[j0][idx]--;
-            countSq[Board::getSquareNumber(i, j0)][idx]--;
-            countNums[i][j0]--;
-        }
-    }
-    // check square k0 surrounding (i0, j0)
-    int k0 = Board::getSquareNumber(i0, j0);
-    for (Square sq(k0); sq.hasNext(); sq.next()) {
+    for (int i=0; i<Board::N; i++)
+        if (aNums[i][j0][idx])
+            decrement(i, j0, idx);
+
+    // check square surrounding (i0, j0)
+    for (Square sq(i0, j0); sq.hasNext(); sq.next()) {
         int i, j;
         sq.getPos(&i, &j);
-        if (aNums[i][j][idx]) {
-            aNums[i][j][idx] = false;
-            countRow[i][idx]--;
-            countCol[j][idx]--;
-            countSq[k0][idx]--;
-            countNums[i][j]--;
-        }
+        if (aNums[i][j][idx])
+            decrement(i, j, idx);
     }
     // put this in test
     // countRow[i0][idx] = 0;
@@ -107,25 +99,15 @@ void Technique::decrementSurrounding(int i0, int j0, int c0) {
     // countSq[Board::getSquareNumber(i0, j0)][idx] = 0;
 }
 
-bool Technique::insert(Board* b, int i, int j, int c) {
-    if (b->insert(i, j, c)) {
-        // other numbers are now unavailable at this position
-        int k = b->getSquareNumber(i, j);
-        for (int idx=0; idx<Board::N; idx++) {
-            if (aNums[i][j][idx]) {
-                aNums[i][j][idx] = false;
-                countRow[i][idx]--;
-                countCol[j][idx]--;
-                countSq[k][idx]--;
-                countNums[i][j]--;
-            }
-        }
-        // put this in test countNums[i][j] = 0;
-        // this number is now unavailable in surrounding positions
-        decrementSurrounding(i, j, c);
-        return true;
+void Technique::insert(int i, int j, char c) {
+    // other numbers are now unavailable at this position
+    for (int idx=0; idx<Board::N; idx++) {
+        if (aNums[i][j][idx])
+            decrement(i, j, idx);
     }
-    else return false;
+    // put this in test countNums[i][j] = 0;
+    // this number is now unavailable in surrounding positions
+    decrementSurrounding(i, j, c);
 }
 
 bool Technique::availableInRow(int* i0, char* c0) {
@@ -150,6 +132,54 @@ bool Technique::availableInCol(int* j0, char* c0) {
                 *c0 = c;
                 text = "Open position in col " + std::to_string(j);
                 return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Technique::availableInSq(int* k0, char* c0) {
+    for (int k=0; k<Board::N; k++) {
+        for (char c='1'; c<='9'; c++) {
+            if (countSq[k][Board::entryToIdx(c)] == 1) {
+                *k0 = k;
+                *c0 = c;
+                text = "Open position in square " + std::to_string(k);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Technique::oneAvailable(int* i0, int* j0) {
+    for (int i=0; i<Board::N; i++) {
+        for (int j=0; j<Board::N; j++) {
+            if (countNums[i][j] == 1) {
+                *i0 = i;
+                *j0 = j;
+                text = "Only entry available at (" + std::to_string(i) + ", " + std::to_string(j) + ")";
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Technique::nextAvailable(int* i0, int* j0, char* c0) {
+    for (int i=0; i<Board::N; i++) {
+        for (int j=0; j<Board::N; j++) {
+            if (countNums[i][j] == 0) continue;
+
+            for (char c='1'; c<='9'; c++) {
+                if (isAvailable(i, j, c)) {
+                    *i0 = i;
+                    *j0 = j;
+                    *c0 = c;
+                    text = "Next available entry";
+                    decrement(i, j, Board::entryToIdx(c));
+                    return true;
+                }
             }
         }
     }

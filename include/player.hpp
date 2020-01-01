@@ -15,9 +15,6 @@
 #include "board.hpp"
 
 class Player {
-    const std::string DBASE = "save";    // base directory name for board saves
-    const std::string FNAME = "board";   // base file name for board saves
-
     /**
      * Get the user input
      * @param input the user input
@@ -38,17 +35,14 @@ class Player {
     bool remove();
 
     /**
-     * Make directory for board saves
-     */
-    void mkSaveDir();
-
-    /**
      * Handle the player input
      */
     virtual void input();
 
 protected :
     const std::string NAME;                 // player name
+    const std::string STARTTEXT
+        = NAME + " Start!";                 // starting text
     const std::string WINTEXT
         = "Congrats " + NAME + "!!!";       // winning text
     const std::string LOSETEXT
@@ -57,9 +51,20 @@ protected :
     const bool AUTOSAVE;                    // true if autosave board after each valid move
     Board b;                                // player board
     bool forceQuit;                         // true if user exits midgame
+    const std::string DBASE = "save";       // base directory name for board saves
+    const std::string FNAME = "board";      // base file name for board saves
     std::string dName;                      // directory name for board saves
     int nSaves;                             // number of board saves
     int nMoves;                             // number of valid moves player makes
+
+    /**
+     * Initialize player with a board
+     * @param n player name
+     * @param b the board
+     * @param autoSave true if autosave board after each valid move
+     * @param dname directory name for board saves
+     */
+    Player(std::string n, const Board& b, bool autoSave, std::string dname);
 
     /**
      * Create board from user input
@@ -72,9 +77,15 @@ protected :
     void initializeBoard();
 
     /**
+     * Make directory for board saves
+     * @param base the base directory name
+     */
+    void mkSaveDir(std::string base);
+
+    /**
      * Save the board as a text file
      * @param text text displayed at the bottom of file
-     * @param subText subText displayed below text
+     * @param subText subtext displayed below text
      */
     virtual void save(std::string text = "", std::string subText = "");
 
