@@ -120,6 +120,12 @@ public :
      * Clear the visual board
      */
     void clear();
+
+    /**
+     * copy vb to this visual board
+     * @param vb the visual board to copy
+     */
+    void copy(const VisualBoard& vb);
 };
 
 #endif /* visualBoard_hpp */

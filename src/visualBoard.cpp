@@ -272,6 +272,7 @@ void VisualBoard::render() {
 }
 
 void VisualBoard::save(std::string fname) {
+    render();
     SDL_Surface* screenshot = SDL_CreateRGBSurface(0, Screen::SCREEN_WIDTH, Screen::SCREEN_HEIGHT, 32,
                                                    0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
     SDL_RenderReadPixels(s.renderer, NULL, SDL_GetWindowPixelFormat(s.window), screenshot->pixels, screenshot->pitch);
@@ -298,6 +299,26 @@ void VisualBoard::clear() {
         vOutlinePos[i].clear();
         for (int j=0; j<Board::N; j++)
             nums[i][j].clear();
+    }
+    s.close();
+}
+
+void VisualBoard::copy(const VisualBoard& vb) {
+    this->clear();
+
+    this->title = vb.title;
+    this->text = vb.text;
+    this->subText = vb.subText;
+
+    for (int i=0; i<Board::N; i++) {
+        for (const SDL_Point& p : vb.vOutlinePos[i])
+            this->vOutlinePos[i].push_back(p);
+
+        for (int j=0; j<Board::N; j++)
+            this->nums[i][j] = vb.nums[i][j];
+            // do i need a deep copy?
+            //this->nums[i][j] = VisualText(s, vb.nums[i][j].text, vb.nums[i][j].color,
+            //                              board2Screen(i, j), 1, BOARD_WIDTH/Board::N);
     }
     s.close();
 }

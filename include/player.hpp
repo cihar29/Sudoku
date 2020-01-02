@@ -77,6 +77,11 @@ protected :
     void initializeBoard();
 
     /**
+     * Start method called before game loop
+     */
+    virtual void start();
+
+    /**
      * Make directory for board saves
      * @param base the base directory name
      */

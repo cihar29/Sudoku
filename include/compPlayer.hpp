@@ -17,19 +17,12 @@ class CompPlayer : virtual public Player {
     const std::string TESTDBASE = "test";   // base directory name for test board saves
 
     /**
-     * Print the board before starting game
-     * @param text text for the board save
-     * @param subText subtext for the board save
-     */
-    void start(std::string text = "", std::string subText = "");
-
-    /**
      * Wait for the user to press enter
      * User can also save with 's' or exit with 'q'
      * @param text the text for the board save
      * @param subText the subtext for the board save
      */
-    void waitForEnter(std::string text = "", std::string subText = "");
+    virtual void wait(std::string text = "", std::string subText = "");
 
     /**
      * Insert into computer player's board and technique
@@ -39,12 +32,16 @@ class CompPlayer : virtual public Player {
      * @param text text describing the technique
      * @return true if insert is successful
      */
-    bool insert(int i, int j, char c, std::string text);
+    virtual bool insert(int i, int j, char c, std::string text);
 
     /**
-     * Handle the computer player input
+     * Use a test computer player
+     * @param i row of initial insert
+     * @param j col of initial insert
+     * @param c entry of initial insert
+     * @return true if test player wins
      */
-    void input();
+    virtual bool testPlayer(int i, int j, char c);
 
     /**
      * Handle the end of the game, including quitting midgame
@@ -55,6 +52,7 @@ class CompPlayer : virtual public Player {
 protected :
     const bool WALKTHROUGH;                             // true if user works through puzzle step-by-step
     const std::string NOMOVESTEXT = "No moves found";   // no moves found text
+    const std::string ENDTESTTEXT = "End test";         // end test text
     Technique tech;                                     // technique used to solve puzzle
     const bool TEST;                                    // true if this is a test computer player
     bool endTest;                                       // true if test is over
@@ -69,6 +67,11 @@ protected :
      * @param dname directory name for board saves
      */
     CompPlayer(std::string n, const Board& b, bool autoSave, bool walkThrough, const Technique& t, std::string dname);
+
+    /**
+     * Start method called before game loop
+     */
+    void start();
 
     /**
      * Calculate the move to solve a Sodoku puzzle using a technique
@@ -86,6 +89,11 @@ protected :
      * @param subText subtext displayed below text
      */
     void save(std::string text = "", std::string subText = "");
+
+    /**
+     * Handle the computer player input
+     */
+    void input();
 
 public :
     /**

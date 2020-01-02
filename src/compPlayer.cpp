@@ -11,29 +11,20 @@
 CompPlayer::CompPlayer(std::string n, std::string fname, bool autoSave, bool walkThrough) :
 Player(n, fname, autoSave), TEST(false), tech(b), WALKTHROUGH(walkThrough), endTest(false) {
 
-    start(STARTTEXT);
 }
 
 CompPlayer::CompPlayer(std::string n, bool create, bool autoSave, bool walkThrough) :
 Player(n, create, autoSave), TEST(false), tech(b), WALKTHROUGH(walkThrough), endTest(false) {
 
-    start(STARTTEXT);
 }
 
 CompPlayer::CompPlayer(std::string n, const Board& b, bool autoSave,
                        bool walkThrough, const Technique& t, std::string dname) :
 Player(n, b, autoSave, dname), TEST(true), tech(t), WALKTHROUGH(walkThrough), endTest(false) {
 
-    start(STARTTEXT);
 }
 
-void CompPlayer::start(std::string text, std::string subText) {
-    b.print();
-    if (AUTOSAVE) save(text, subText);
-    if (WALKTHROUGH) waitForEnter(text, subText);
-}
-
-void CompPlayer::waitForEnter(std::string text, std::string subText) {
+void CompPlayer::wait(std::string text, std::string subText) {
     std::string input;
     do {
         std::cout << "Press enter to continue ('q' to quit): ";
@@ -45,6 +36,20 @@ void CompPlayer::waitForEnter(std::string text, std::string subText) {
         else if (input == "s")
             save(text, subText);
     } while (!input.empty());
+}
+
+void CompPlayer::start() {
+    Player::start();
+    b.print();
+    std::string text = STARTTEXT;
+    std::string subText = "";
+    if (TEST) {
+        text = b.getText();
+        subText = tech.getText();
+    }
+
+    if (AUTOSAVE) save(text, subText);
+    if (WALKTHROUGH) wait(text, subText);
 }
 
 bool CompPlayer::solve(int* i0, int* j0, char* c0) {
@@ -96,10 +101,26 @@ bool CompPlayer::insert(int i, int j, char c, std::string text) {
         tech.insert(i, j, c);
         printf("%s\n\n\n", text.data());
         b.print();
-        if (AUTOSAVE) save(b.getText(), text);
         return true;
     }
     else return false;
+}
+
+bool CompPlayer::testPlayer(int i, int j, char c) {
+    CompPlayer test("Test " + NAME, b, AUTOSAVE, WALKTHROUGH, tech, dName);
+
+    if (test.forceQuit || !test.insert(i, j, c, tech.getText()))
+        forceQuit = true;
+    else if (test.play()) {
+        nMoves += test.getNMoves();
+        b = test.b;     // set the winning board
+        return true;
+    }
+    else if (test.forceQuit)
+        forceQuit = true;
+    
+    nMoves += test.getNMoves();
+    return false;
 }
 
 void CompPlayer::input() {
@@ -112,7 +133,8 @@ void CompPlayer::input() {
             forceQuit = true;
             return;
         }
-        if (WALKTHROUGH) waitForEnter(b.getText(), techText);
+        if (AUTOSAVE) save(b.getText(), techText);
+        if (WALKTHROUGH) wait(b.getText(), techText);
     }
     else {
         printf("%s\n\n", NOMOVESTEXT.data());
@@ -124,24 +146,9 @@ void CompPlayer::input() {
         // brute force
         int i, j;
         char c;
-        while (tech.nextAvailable(&i, &j, &c)) {
-            CompPlayer test("Test " + NAME, b, AUTOSAVE, WALKTHROUGH, tech, dName);
-
-            if (test.forceQuit || !test.insert(i, j, c, tech.getText())) {
-                forceQuit = true;
+        while (tech.nextAvailable(&i, &j, &c))
+            if (testPlayer(i, j, c) || forceQuit)
                 return;
-            }
-            else if (test.play()) {
-                nMoves += test.getNMoves();
-                b = test.b;     // set the winning board
-                return;
-            }
-            else if (test.forceQuit) {
-                forceQuit = true;
-                return;
-            }
-            nMoves += test.getNMoves();
-        }
     }
 }
 
@@ -158,8 +165,11 @@ void CompPlayer::save(std::string text, std::string subText) {
 
 void CompPlayer::end(bool winner) {
     if (TEST) {
-        printf("End test\n\n");
-        if (endTest) forceQuit = false;
+        if (endTest) {
+            forceQuit = false;
+            printf("%s\n\n", ENDTESTTEXT.data());
+            if (AUTOSAVE) save(NOMOVESTEXT, ENDTESTTEXT);
+        }
     }
     else Player::end(winner);
 }

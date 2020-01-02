@@ -79,6 +79,10 @@ NAME(n), dName(""), nSaves(0), forceQuit(false), nMoves(0), b{}, AUTOSAVE(autoSa
     if (create) initializeBoard();
 }
 
+void Player::start() {
+    std::cout << STARTTEXT << std::endl << std::endl;
+}
+
 void Player::mkSaveDir(std::string base) {
     // S_IRWXU - Read, write, execute/search by owner
     // S_IRWXG - Read, write, execute/search by group
@@ -139,20 +143,21 @@ void Player::end(bool winner) {
 }
 
 bool Player::play() {
-    // initialize();
 
     bool valid = b.isValid();
     if (valid && !forceQuit) {
 
-        std::cout << STARTTEXT << std::endl << std::endl;
-        while (!b.isFull()) {
+        start();
+        if (!forceQuit) {
+            while (!b.isFull()) {
 
-            input();
-            if (forceQuit) break;
-            nMoves++;
+                input();
+                if (forceQuit) break;
+                nMoves++;
 
-            valid = b.isValid();
-            if (!valid) break;
+                valid = b.isValid();
+                if (!valid) break;
+            }
         }
     }
     bool winner = valid && b.isFull();

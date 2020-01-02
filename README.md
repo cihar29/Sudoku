@@ -15,7 +15,10 @@ Interactive Sudoku game and step-by-step solver to demonstrate principles of OOP
     4. Press 'c' to clear all helping numbers
 3. Use `CompPlayer` class to solve a puzzle text-based (techniques are currently incomplete)
     1. Use `walkThrough` option to click through step-by-step solution
-4. `VisualCompPlayer` class is currently in progress (many bugs)
+    2. Autosave option provides nice text file summary
+4. `VisualCompPlayer` class to solve a puzzle visually
+    1. Use `walkThrough` option to click through step-by-step solution
+    2. Autosave option provides nice image summary
 
 # Gameplay
 <img src="save1/screenshot1.png" width="700"> 

@@ -8,19 +8,14 @@
 
 #include "visualPlayer.hpp"
 
-void VisualPlayer::start(std::string text, std::string subText) {
-    vb.setText(text, subText);
-    vb.render();
-    if (AUTOSAVE) save(text);
-}
-
 VisualPlayer::VisualPlayer(std::string n, std::string fname, bool autoSave) : Player(n, fname, autoSave), vb(b, n) {
-    start(STARTTEXT, AUTOSAVE?"Autosave enabled":" ");
+
 }
 
-VisualPlayer::VisualPlayer(std::string n, const Board& b, bool autoSave, std::string dname) :
-Player(n, b, autoSave, dname), vb(b, n) {
+VisualPlayer::VisualPlayer(std::string n, const Board& b, bool autoSave, std::string dname, const VisualBoard& vb) :
+Player(n, b, autoSave, dname), vb(vb) {
 
+    this->vb.setTitle(n);
 }
 
 void VisualPlayer::createBoard() {
@@ -61,8 +56,14 @@ VisualPlayer::VisualPlayer(std::string n, bool create, bool autoSave) : Player(n
         initializeBoard();
         vb.fillBoard(b);
         if (forceQuit) return;
-        start(STARTTEXT, AUTOSAVE?"Autosave enabled":" ");
     }
+}
+
+void VisualPlayer::start() {
+    Player::start();
+    vb.setText(STARTTEXT, AUTOSAVE?"Autosave enabled":" ");
+    vb.render();
+    if (AUTOSAVE) save(STARTTEXT);
 }
 
 void VisualPlayer::save(std::string text, std::string subText) {
@@ -71,6 +72,7 @@ void VisualPlayer::save(std::string text, std::string subText) {
     vb.save(fname);
     b.clearText();
     vb.setText("", " ");
+    // SDL_Delay(300);
 }
 
 void VisualPlayer::input() {
@@ -118,22 +120,20 @@ void VisualPlayer::input() {
     }
 }
 
-void VisualPlayer::waitForEnter(std::string text, std::string subText) {
+void VisualPlayer::wait(std::string text, std::string subText) {
     while (true) {
         SDL_Event e;
         while (SDL_PollEvent(&e) != 0) {
 
-            if (e.type == SDL_QUIT) {
-                forceQuit = true;
+            if (e.type == SDL_QUIT)
                 return;
-            }
-            // save board
-            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) {
+            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s)
                 save(text, subText);
-                vb.render();
-            }
-            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
-                return;
+            else
+                vb.handleEvent(e);
+
+            vb.setText(text, subText);
+            vb.render();
         }
     }
 }
@@ -142,15 +142,14 @@ void VisualPlayer::end(bool winner) {
     if (forceQuit) Player::end(winner);
     else {
         std::string text = winner?WINTEXT:b.getText();
-        std::string subText = winner?"":LOSETEXT;
+        std::string subText = winner?" ":LOSETEXT;
 
         // render before autosave called in Player::end
         vb.setText(text, subText);
         vb.render();
         Player::end(winner);
 
-        // wait for player to close window
-        waitForEnter(text, subText);
+        wait(text, subText);
     }
     vb.clear();
 }

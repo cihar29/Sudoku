@@ -10,23 +10,24 @@
 
 int main(int argc, const char * argv[]) {
 
-    // play method needs to have a virtual initialize method (instead of putting these start methods in constructor)!
-    // obviously test gameplay for all four types (and corresponding save/autosave)
-    // for visual board, don't make a copy - instead use same board and fillBoard method
-    // check gpos and rpos after creating board for visualcompplayer (saves and autosaves too)
+    // what's going on with visualboard::copy?
+    // make save text better (not take over everything)
     // make sure all tests are passed in technique_test (add more techniques)
-    // test autosave (especially in visualplayer::end (order of rendering))
     // add less hard puzzle to puzzles to demonstrate ease without brute force
     // use googletest
     // tests - every method! (lots to test in technique)
     // make file with better compiler language
-
     // use run file to choose which type of player and options to use
-//    VisualCompPlayer p("Chuck", true, false, true);
-//    VisualCompPlayer p("Chuck", std::string("puzzles/input1.txt"), false, true);
-    CompPlayer p("Chuck", std::string("puzzles/input1.txt"), true, false);
+    
+//    Player p("Chuck", std::string("puzzles/input1.txt"), false);
+//    Player p("Chuck", true, false);
+//    CompPlayer p("Chuck", std::string("puzzles/input1.txt"), true, false);
+//    CompPlayer p("Chuck", true, false, true);
 //    VisualPlayer p("Chuck", std::string("puzzles/input1.txt"), false);
 //    VisualPlayer p("Chuck", true, false);
+    VisualCompPlayer p("Chuck", std::string("puzzles/input1.txt"), true, false);
+//    VisualCompPlayer p("Chuck", true, false, true);
+
     p.play();
     return 0;
 

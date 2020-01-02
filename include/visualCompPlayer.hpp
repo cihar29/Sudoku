@@ -21,16 +21,23 @@ class VisualCompPlayer : public VisualPlayer, public CompPlayer {
      * @param walkThrough true if user works through puzzle step-by-step
      * @param t the technique
      * @param dname directory name for board saves
+     * @param vb the visual board
      */
     VisualCompPlayer(std::string n, const Board& b, bool autoSave, bool walkThrough,
-                     const Technique& t, std::string dname);
+                     const Technique& t, std::string dname, const VisualBoard& vb);
 
     /**
-     * Print and render the board before starting game
-     * @param text text for the board save
-     * @param subText subtext for the board save
+     * Wait for the user to press enter
+     * User can also save with 's' or exit using the box at the upper left corner of the window
+     * @param text the text for the board save
+     * @param subText the subtext for the board save
      */
-    void start(std::string text = "", std::string subText = "");
+    void wait(std::string text = "", std::string subText = "");
+
+    /**
+     * Start method called before game loop
+     */
+    void start();
 
     /**
      * Insert into visual computer player's board and technique
@@ -41,6 +48,15 @@ class VisualCompPlayer : public VisualPlayer, public CompPlayer {
      * @return true if insert is successful
      */
     bool insert(int i, int j, char c, std::string text);
+
+    /**
+     * Use a test visual computer player
+     * @param i row of initial insert
+     * @param j col of initial insert
+     * @param c entry of initial insert
+     * @return true if test player wins
+     */
+    bool testPlayer(int i, int j, char c);
 
     /**
      * Handle the visual computer player input
