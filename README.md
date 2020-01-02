@@ -2,7 +2,7 @@
 Interactive Sudoku game and step-by-step solver to demonstrate principles of OOP (inheritance, polymorphism, testing, etc)
 
 # Start
-1. Install [SDL2 framework](https://www.libsdl.org/download-2.0.php).
+1. Install [SDL2 framework](https://www.libsdl.org/download-2.0.php)
 2. Get a font (.ttf file)
 3. run with `./run.sh` (soon run file will have options for type of player, etc)
 
@@ -15,10 +15,10 @@ Interactive Sudoku game and step-by-step solver to demonstrate principles of OOP
     4. Press 'c' to clear all helping numbers
 3. Use `CompPlayer` class to solve a puzzle text-based (techniques are currently incomplete)
     1. Use `walkThrough` option to click through step-by-step solution
-    2. Autosave option provides nice text file summary
+    2. `autoSave` option provides nice text file summary
 4. `VisualCompPlayer` class to solve a puzzle visually
     1. Use `walkThrough` option to click through step-by-step solution
-    2. Autosave option provides nice image summary
+    2. `autoSave` option provides nice image summary
 
 # Gameplay
 <img src="save1/screenshot1.png" width="700"> 

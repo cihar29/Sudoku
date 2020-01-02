@@ -145,7 +145,7 @@ void helpingNumbers::removeAllAt(int i, int j) {
         std::vector<SDL_Point>& v = vOutlinePos[Board::entryToIdx(num.text)];
         for (auto it = v.begin(); it != v.end(); ++it) {
 
-            if (it->x == num.rect2.x && it->y == num.rect2.y ) {
+            if (it->x == num.rect2.x && it->y == num.rect2.y) {
                 it = v.erase(it);
                 it--;
             }

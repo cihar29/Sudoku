@@ -81,7 +81,8 @@ bool VisualCompPlayer::testPlayer(int i, int j, char c) {
     else if (test.play()) {
         nMoves += test.getNMoves();
         b = test.b;     // set the winning board
-        //vb.copy(test.vb);
+        vb.fillBoard(b);
+        //vb.copyNumbers(test.vb);
         vb.setTitle(NAME);
         return true;
     }

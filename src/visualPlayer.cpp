@@ -55,7 +55,6 @@ VisualPlayer::VisualPlayer(std::string n, bool create, bool autoSave) : Player(n
     if (create) {
         initializeBoard();
         vb.fillBoard(b);
-        if (forceQuit) return;
     }
 }
 
