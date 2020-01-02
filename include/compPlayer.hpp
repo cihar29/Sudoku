@@ -29,10 +29,9 @@ class CompPlayer : virtual public Player {
      * @param i the row
      * @param j the col
      * @param c the entry
-     * @param text text describing the technique
      * @return true if insert is successful
      */
-    virtual bool insert(int i, int j, char c, std::string text);
+    virtual bool insert(int i, int j, char c);
 
     /**
      * Use a test computer player

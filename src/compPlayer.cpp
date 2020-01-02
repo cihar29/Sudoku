@@ -96,10 +96,10 @@ bool CompPlayer::solve(int* i0, int* j0, char* c0) {
     return false;
 }
 
-bool CompPlayer::insert(int i, int j, char c, std::string text) {
+bool CompPlayer::insert(int i, int j, char c) {
     if (b.insert(i, j, c)) {
         tech.insert(i, j, c);
-        printf("%s\n\n\n", text.data());
+        printf("%s\n\n\n", tech.getText().data());
         b.print();
         return true;
     }
@@ -109,7 +109,7 @@ bool CompPlayer::insert(int i, int j, char c, std::string text) {
 bool CompPlayer::testPlayer(int i, int j, char c) {
     CompPlayer test("Test " + NAME, b, AUTOSAVE, WALKTHROUGH, tech, dName);
 
-    if (test.forceQuit || !test.insert(i, j, c, tech.getText()))
+    if (test.forceQuit || !test.insert(i, j, c))
         forceQuit = true;
     else if (test.play()) {
         nMoves += test.getNMoves();
@@ -127,12 +127,11 @@ void CompPlayer::input() {
     int i, j;
     char c;
     if (solve(&i, &j, &c)) {
-
-        std::string techText = tech.getText();
-        if (!insert(i, j, c, techText)) {
+        if (!insert(i, j, c)) {
             forceQuit = true;
             return;
         }
+        std::string techText = tech.getText();
         if (AUTOSAVE) save(b.getText(), techText);
         if (WALKTHROUGH) wait(b.getText(), techText);
     }
@@ -169,6 +168,7 @@ void CompPlayer::end(bool winner) {
             forceQuit = false;
             printf("%s\n\n", ENDTESTTEXT.data());
             if (AUTOSAVE) save(NOMOVESTEXT, ENDTESTTEXT);
+            if (WALKTHROUGH) wait(NOMOVESTEXT, ENDTESTTEXT);
         }
     }
     else Player::end(winner);

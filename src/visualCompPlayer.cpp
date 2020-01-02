@@ -58,14 +58,15 @@ void VisualCompPlayer::start() {
     CompPlayer::start();
 }
 
-bool VisualCompPlayer::insert(int i, int j, char c, std::string text) {
+bool VisualCompPlayer::insert(int i, int j, char c) {
     vb.setInsert(i, j, c);
     if (vb.insert(&b)) {
         tech.insert(i, j, c);
-        printf("%s\n\n\n", text.data());
+        std::string techText = tech.getText();
+        printf("%s\n\n\n", techText.data());
         b.print();
 
-        vb.setText(b.getText(), text);
+        vb.setText(b.getText(), techText);
         vb.render();
         return true;
     }
@@ -75,7 +76,7 @@ bool VisualCompPlayer::insert(int i, int j, char c, std::string text) {
 bool VisualCompPlayer::testPlayer(int i, int j, char c) {
     VisualCompPlayer test("Test " + NAME, b, AUTOSAVE, WALKTHROUGH, tech, dName, vb);
 
-    if (test.forceQuit || !test.insert(i, j, c, tech.getText()))
+    if (test.forceQuit || !test.insert(i, j, c))
         forceQuit = true;
     else if (test.play()) {
         nMoves += test.getNMoves();
@@ -117,7 +118,7 @@ void VisualCompPlayer::end(bool winner) {
             vb.setText(NOMOVESTEXT, ENDTESTTEXT);
             vb.render();
             if (AUTOSAVE) save(NOMOVESTEXT, ENDTESTTEXT);
-            if (WALKTHROUGH) wait();
+            if (WALKTHROUGH) wait(NOMOVESTEXT, ENDTESTTEXT);
         }
     }
     else VisualPlayer::end(winner);

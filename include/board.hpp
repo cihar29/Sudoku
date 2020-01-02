@@ -19,7 +19,6 @@ public :
     const static char BLANK = ' ';  // blank entry
 private :
     int nFilled;                    // total filled entries
-    int entries[N];                 // number of filled entries per entry
     char board[N][N];               // the board
     char board0[N][N];              // the initial board
     std::string text;               // current text
@@ -31,18 +30,6 @@ private :
      * @param red true if text is red
      */
     void setAndPrintText(std::string t, bool green = false, bool red = false);
-
-    /**
-     * Increment entry in the entries array
-     * @param c the character entry to increment
-     */
-    void addEntry(char c);
-
-    /**
-     * Decrement entry in the entries array
-     * @param c the character entry to decrement
-     */
-    void removeEntry(char c);
 
 public :
     /**
@@ -87,13 +74,6 @@ public :
      * @return true if full
      */
     bool isFull() const;
-
-    /**
-     * Get the number of entries for an entry in board
-     * @param c the entry
-     * @return the number of entries or -1 if c invalid
-     */
-    int nEntry(char c) const;
 
     /**
      * Is c in row i in board?

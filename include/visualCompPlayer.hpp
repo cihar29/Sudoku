@@ -44,10 +44,9 @@ class VisualCompPlayer : public VisualPlayer, public CompPlayer {
      * @param i the row
      * @param j the col
      * @param c the entry
-     * @param text text describing the technique
      * @return true if insert is successful
      */
-    bool insert(int i, int j, char c, std::string text);
+    bool insert(int i, int j, char c);
 
     /**
      * Use a test visual computer player

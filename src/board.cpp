@@ -8,7 +8,7 @@
 
 #include "board.hpp"
 
-Board::Board() : nFilled(0), entries(), text("") {
+Board::Board() : nFilled(0), text("") {
     // set the board to BLANK
     for (int i=0; i<N; i++)
         for (int j=0; j<N; j++)
@@ -35,29 +35,13 @@ int Board::getSquareNumber(int i, int j) {
     return i/srn*srn + j/srn;
 }
 
-void Board::addEntry(char c) {
-    int idx = entryToIdx(c);
-    if (0<=idx && idx<N) {
-        entries[idx]++;
-        nFilled++;
-    }
-}
-
-void Board::removeEntry(char c) {
-    int idx = entryToIdx(c);
-    if (0<=idx && idx<N && entries[idx]>0 && nFilled>0) {
-        entries[idx]--;
-        nFilled--;
-    }
-}
-
 void Board::setInitialBoard() {
     for (int i=0; i<N; i++)
         for (int j=0; j<N; j++)
             board0[i][j] = board[i][j];
 }
 
-Board::Board(std::string fname) : nFilled(0), entries(), text("") {
+Board::Board(std::string fname) : nFilled(0), text("") {
     std::ifstream file(fname);
     if (!file.is_open()) setAndPrintText(fname + " not found!");
 
@@ -77,7 +61,7 @@ Board::Board(std::string fname) : nFilled(0), entries(), text("") {
                     char c = line[j];
                     if (49<=c && c<=57) {
                         board[i][j] = c;
-                        addEntry(c);
+                        nFilled++;
                     }
                     // space or invalid character
                     else {
@@ -145,12 +129,6 @@ bool Board::isFull() const {
     return nFilled == N*N;
 }
 
-int Board::nEntry(char c) const {
-    int idx = entryToIdx(c);
-    if (0<=idx && idx<N) return entries[idx];
-    else                 return -1;
-}
-
 bool Board::inRow(int i, char c) const {
     for (int j=0; j<N; j++) {
         if (board[i][j] == c) return true;
@@ -189,7 +167,7 @@ bool Board::insert(int i, int j, char c) {
         if (board[i][j] == BLANK) {
             if (49<=c && c<=57) {
                 board[i][j] = c;
-                addEntry(c);
+                nFilled++;
                 setAndPrintText("Inserted " + std::string(1, c) + " at (" +
                                 std::to_string(i) + ", " + std::to_string(j) + ")", true);
                 return true;
@@ -210,7 +188,7 @@ bool Board::remove(int i, int j) {
             char c = board[i][j];
             if (c != BLANK) {
                 board[i][j] = BLANK;
-                removeEntry(c);
+                nFilled--;
                 setAndPrintText("Removed " + std::string(1, c) + " from (" +
                                 std::to_string(i) + ", " + std::to_string(j) + ")", false, true);
                 return true;
