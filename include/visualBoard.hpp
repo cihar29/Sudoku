@@ -120,13 +120,6 @@ public :
      * Clear the visual board
      */
     void clear();
-
-    /**
-     * Copy vb numbers to this visual board
-     * Note: title, text, and subtext are not copied
-     * @param vb the visual board to copy
-     */
-    void copyNumbers(const VisualBoard& vb);
 };
 
 #endif /* visualBoard_hpp */

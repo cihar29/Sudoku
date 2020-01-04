@@ -49,6 +49,12 @@ class VisualCompPlayer : public VisualPlayer, public CompPlayer {
     bool insert(int i, int j, char c);
 
     /**
+     * Fill the empty positions in this board with the entries in otherB
+     * @param otherB the other board
+     */
+    void insertTheRest(const Board& otherB);
+
+    /**
      * Use a test visual computer player
      * @param i row of initial insert
      * @param j col of initial insert

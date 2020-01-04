@@ -9,7 +9,7 @@
 #include "visualCompPlayer.hpp"
 
 VisualCompPlayer::VisualCompPlayer(std::string n, std::string fname, bool autoSave, bool walkThrough) :
-Player(n, fname, autoSave), VisualPlayer(n, fname, autoSave), CompPlayer(n, fname, autoSave, walkThrough) {
+Player(n, fname, autoSave), VisualPlayer(n, fname, autoSave), CompPlayer(n, fname, autoSave, walkThrough, false) {
 
 }
 
@@ -73,6 +73,17 @@ bool VisualCompPlayer::insert(int i, int j, char c) {
     else return false;
 }
 
+void VisualCompPlayer::insertTheRest(const Board& otherB) {
+    for (int i=0; i<Board::N; i++) {
+        for (int j=0; j<Board::N; j++) {
+            if (b.isEmpty(i, j)) {
+                vb.setInsert(i, j, otherB.at(i, j));
+                vb.insert(&b);
+            }
+        }
+    }
+}
+
 bool VisualCompPlayer::testPlayer(int i, int j, char c) {
     VisualCompPlayer test("Test " + NAME, b, AUTOSAVE, WALKTHROUGH, tech, dName, vb);
 
@@ -80,10 +91,9 @@ bool VisualCompPlayer::testPlayer(int i, int j, char c) {
         forceQuit = true;
     else if (test.play()) {
         nMoves += test.getNMoves();
-        b = test.b;     // set the winning board
-        vb.fillBoard(b);
-        //vb.copyNumbers(test.vb);
+        insertTheRest(test.b);
         vb.setTitle(NAME);
+        vb.setText("", " ");
         return true;
     }
     else if (test.forceQuit)

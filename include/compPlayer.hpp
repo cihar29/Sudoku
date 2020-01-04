@@ -101,8 +101,9 @@ public :
      * @param fname file name
      * @param autoSave true if autosave board after each valid move
      * @param walkThrough true if user works through puzzle step-by-step
+     * @param test is this a test player (i.e. don't attempt brute force)?
      */
-    CompPlayer(std::string n, std::string fname, bool autoSave, bool walkThrough);
+    CompPlayer(std::string n, std::string fname, bool autoSave, bool walkThrough, bool test);
 
     /**
      * Initialize computer player with empty board

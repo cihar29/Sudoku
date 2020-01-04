@@ -8,8 +8,8 @@
 
 #include "compPlayer.hpp"
 
-CompPlayer::CompPlayer(std::string n, std::string fname, bool autoSave, bool walkThrough) :
-Player(n, fname, autoSave), TEST(false), tech(b), WALKTHROUGH(walkThrough), endTest(false) {
+CompPlayer::CompPlayer(std::string n, std::string fname, bool autoSave, bool walkThrough, bool test) :
+Player(n, fname, autoSave), TEST(test), tech(b), WALKTHROUGH(walkThrough), endTest(false) {
 
 }
 

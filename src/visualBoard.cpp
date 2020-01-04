@@ -302,25 +302,3 @@ void VisualBoard::clear() {
     }
     s.close();
 }
-
-void VisualBoard::copyNumbers(const VisualBoard& vb) {
-    this->title.clear();
-    this->text.clear();
-    this->subText.clear();
-
-    for (int i=0; i<Board::N; i++) {
-
-        this->vOutlinePos[i].clear();
-        for (const SDL_Point& p : vb.vOutlinePos[i])
-            this->vOutlinePos[i].push_back(p);
-
-        for (int j=0; j<Board::N; j++) {
-            this->nums[i][j].clear();
-            this->nums[i][j] = vb.nums[i][j];
-            // do i need a deep copy?
-            //this->nums[i][j] = VisualText(s, vb.nums[i][j].text, vb.nums[i][j].color,
-            //                              board2Screen(i, j), 1, BOARD_WIDTH/Board::N);
-        }
-    }
-    s.close();
-}
