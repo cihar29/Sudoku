@@ -15,7 +15,8 @@ Interactive Sudoku game and step-by-step solver to demonstrate principles of OOP
     1. `./run.sh -type cp`
     2. `./run.sh -type vp`
     3. `./run.sh -type vcp -walkthrough y`
-    4. `./run.sh -type vcp -autosave y` (pretty pictures)
+    4. `./run.sh -type vcp -file puzzles/input3.txt -autosave y` (pretty pictures)
+    4. `./run.sh -type vcp -autosave y` (pretty pictures with test players)
 5. After you compile once, feel free to comment it out in `run.sh` 
 
 # Instructions
@@ -43,3 +44,4 @@ Helping Numbers
 
 # Testing
 1. Get [Catch2](https://github.com/catchorg/Catch2) header file
+2. `./run.sh test`

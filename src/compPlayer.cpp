@@ -92,6 +92,8 @@ bool CompPlayer::solve(int* i0, int* j0, char* c0) {
             }
         }
     }
+    else if (tech.phantoms() || tech.cloggingPairs())
+        return solve(i0, j0, c0);   // look again
     // no moves
     return false;
 }
@@ -137,17 +139,27 @@ void CompPlayer::input() {
     }
     else {
         printf("%s\n\n", NOMOVESTEXT.data());
+        // with endtest here, test players cannot call another test player
         if (TEST) {
             endTest = true;
             forceQuit = true;
             return;
         }
-        // brute force
+        // brute force - last resort effort if all else fails
+        tech.setBruteForce();
         int i, j;
         char c;
-        while (tech.nextAvailable(&i, &j, &c))
+        while (tech.getNextBrute(&i, &j, &c)) {
+            //if (!b.isEmpty(i, j)) continue;
             if (testPlayer(i, j, c) || forceQuit)
                 return;
+        }
+        // with endtest here, test players may call another test
+        //if (TEST) {
+        //    endTest = true;
+        //    forceQuit = true;
+        //}
+        forceQuit = true;
     }
 }
 

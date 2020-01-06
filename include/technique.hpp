@@ -9,6 +9,9 @@
 #ifndef technique_hpp
 #define technique_hpp
 
+#include <map>
+#include <utility>
+#include <vector>
 #include "board.hpp"
 
 class Technique {
@@ -18,22 +21,105 @@ class Technique {
         countCol[Board::N][Board::N],           // available entry count per col
         countSq[Board::N][Board::N];            // available entry count per square
     std::string text;                           // text describing the technique
+    typedef std::pair<int, int> pos;            // position (row, col) on board
+    std::vector<std::pair<pos, char>> vBrute;   // list of available positions and numbers
+    int iBrute;                                 // the current index in vBrute
 
     /**
-     * Make entry unavailable by decrementing the count arrays with index idx at position (i, j)
+     * Set the entries unavailable at position (i, j)
      * @param i the row
      * @param j the col
      * @param idx the index of the entry
      */
-    void decrement(int i, int j, int idx);
+    void setUnavailablePos(int i, int j, int idx);
 
     /**
-     * Decrement the count arrays with c0 in the positions surrounding (i0, j0)
+     * Set the entry c0 unavailable in the positions surrounding (i0, j0)
      * @param i0 the row
      * @param j0 the col
      * @param c0 the entry
      */
-    void decrementSurrounding(int i0, int j0, char c0);
+    void setUnavailableSurrounding(int i0, int j0, char c0);
+
+    /**
+     * Look for a phantom row (2 or 3 available entries in a row) in square k
+     * @param k the square
+     * @param c the entry
+     * @param i0 the phantom row
+     * @return true if phantom row found
+     */
+    bool phantomRowInSq(int k, char c, int* i0) const;
+
+    /**
+     * Look to set entries unavailable with a phantom row
+     * @return true if phantom row causes entry to become unavailable
+     */
+    bool phantomRowSetUnavailable();
+
+    /**
+     * Look for a phantom col (2 or 3 available entries in a col) in square k
+     * @param k the square
+     * @param c the entry
+     * @param j0 the phantom col
+     * @return true if phantom col found
+     */
+    bool phantomColInSq(int k, char c, int* j0) const;
+
+    /**
+     * Look to set entries unavailable with a phantom col
+     * @return true if phantom col causes entry to become unavailable
+     */
+    bool phantomColSetUnavailable();
+
+    /**
+     * Look for a phantom square (2 or 3 available entries in a square) in row i
+     * @param i the row
+     * @param c the entry
+     * @param k0 the phantom square
+     * @return true if phantom square found
+     */
+    bool phantomSqInRow(int i, char c, int* k0) const;
+
+    /**
+     * Look for a phantom square (2 or 3 available entries in a square) in col j
+     * @param j the col
+     * @param c the entry
+     * @param k0 the phantom square
+     * @return true if phantom square found
+     */
+    bool phantomSqInCol(int j, char c, int* k0) const;
+
+    /**
+     * Look to set entries unavailable with a phantom square
+     * @param lookAtRow true if looking at phantomSqInRow, else look at phantomSqInCol
+     * @return true if phantom square causes entry to become unavailable
+     */
+    bool phantomSqSetUnavailable(bool lookAtRow);
+
+    /**
+     * Look for entries with a pair of positions and match to other entries
+     * @param entryPos the list of available positions per entry
+     * @return true if clogging pair found and an available entry is made unavailable
+     */
+    bool matchPairs(const std::vector<pos>* entryPos);
+
+    /**
+     * Look for matching entries in pair of positions in a row
+     * @return true if clogging pair found and an available entry is made unavailable
+     */
+    bool clogInRow();
+
+    /**
+     * Look for matching entries in pair of positions in a col
+     * @return true if clogging pair found and an available entry is made unavailable
+     */
+    bool clogInCol();
+
+    /**
+     * Look for matching entries in pair of positions in a square
+     * @return true if clogging pair found and an available entry is made unavailable
+     */
+    bool clogInSq();
 
 public :
     /**
@@ -97,13 +183,30 @@ public :
     bool oneAvailable(int* i0, int* j0);
 
     /**
-     * Get the next available entry c0 at position (i0, j0)
-     * @param i0 the row
-     * @param j0 the col
-     * @param c0 the entry
+     * Look for phantom rows or cols in the board
+     * @return true if phantom found and an available entry is made unavailable
+     */
+    bool phantoms();
+
+    /**
+     * Look for pairs of entries that take up two positions in a row, col, or square
+     * @return true if clogging pair found and an available entry is made unavailable
+     */
+    bool cloggingPairs();
+
+    /**
+     * Set up technique for brute force
+     */
+    void setBruteForce();
+
+    /**
+     * Get the next available entry c at position (i, j)
+     * @param i the row
+     * @param j the col
+     * @param c the entry
      * @return true if an entry is available
      */
-    bool nextAvailable(int* i0, int* j0, char* c0);
+    bool getNextBrute(int* i, int* j, char* c);
 };
 
 #endif /* technique_hpp */

@@ -1,0 +1,12 @@
+### Chuck's Board ###
+  954  2 
+  519743 
+4     519
+79    2  
+5846 2 73
+  2    54
+941     2
+ 6 7 4   
+ 5   1   
+### Inserted 4 at (4, 2) ###
+### Open position in row 4 ###

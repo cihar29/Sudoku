@@ -1,0 +1,12 @@
+### Chuck's Board ###
+    5   1
+   1 3 85
+  1 2    
+1  5 7   
+  4   1  
+ 9   1   
+51    473
+  2 1    
+    4  19
+### Inserted 5 at (0, 4) ###
+### Open position in col 4 ###

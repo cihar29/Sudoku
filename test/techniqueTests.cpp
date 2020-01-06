@@ -12,8 +12,10 @@ TEST_CASE("technique:tests", "[sudoku:technique]") {
             CompPlayer p(fname, dname+fname, false, false, true);
             p.play();
 
-            // what if wrong number inserted?
-            REQUIRE(p.getNMoves() > 0);
+            if (fname.find("fail") != std::string::npos)
+                REQUIRE(p.getNMoves() == 0);
+            else
+                REQUIRE(p.getNMoves() > 0);
         }
         closedir(dir);
     }

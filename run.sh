@@ -17,9 +17,9 @@ if [ $# -eq 0 ] ; then
 elif [[ $# -eq 1 && ${args[0]} == "test" ]] ; then
 
   echo "Run tests"
-  #g++ -std=c++17 -I include -c test/allTests.cpp
-  #g++ -std=c++17 -I include -o allTests allTests.o src/{square,board,technique,player,compPlayer}.cpp test/techniqueTests.cpp
-  #./allTests
+  g++ -std=c++17 -I include -c test/allTests.cpp
+  g++ -std=c++17 -I include -o allTests allTests.o src/{square,board,technique,player,compPlayer}.cpp test/{squareTests.cpp,techniqueTests.cpp}
+  ./allTests
 
 else
 

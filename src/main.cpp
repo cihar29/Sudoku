@@ -16,21 +16,15 @@ bool str2Bool(std::string input) {
 int main(int argc, const char * argv[]) {
 
     // make save text better on visual board (not take over everything)
-    // make sure all tests are passed in technique_test (add more technique methods)
-    // add less hard puzzle to puzzles to demonstrate ease without brute force
     // tests - every method! (lots to test in technique)
     // make file with better compiler language
 
-//    Player p("Chuck", std::string("puzzles/input1.txt"), false);
-//    Player p("Chuck", true, false);
-//    CompPlayer p("Chuck", std::string("puzzles/input1.txt"), true, false, false);
-//    CompPlayer p("Chuck", true, false, true);
-//    VisualPlayer p("Chuck", std::string("puzzles/input1.txt"), false);
-//    VisualPlayer p("Chuck", true, false);
-//    VisualCompPlayer p("Chuck", std::string("puzzles/input1.txt"), true, false);
-//    VisualCompPlayer p("Chuck", true, false, true);
-
-//    p.play();
+//    Player p0("Chuck", std::string("puzzles/input1.txt"), false);
+//    CompPlayer p0("Chuck", std::string("puzzles/input3.txt"), false, false, false);
+//    VisualPlayer p0("Chuck", std::string("puzzles/input3.txt"), false);
+//    VisualCompPlayer p0("Chuck", std::string("puzzles/input3.txt"), true, false);
+//    p0.play();
+//    printf("moves: %i\n", p0.getNMoves());
 //    return 0;
 
     std::map<std::string, std::string> mPars =
